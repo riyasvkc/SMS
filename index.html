@@ -1,0 +1,315 @@
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sale/Purchase Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+                .flex-container {
+                    display: flex;
+                    justify-content: center;
+                    }
+                    .flex-container > div {
+                    margin: 10px;
+                    }
+                    /* Set different sizes for each child element */
+                    .flex-item-1 {
+                    flex: 3; /* Takes up 1 part of the available space */
+                    width: 320px;
+                    }
+
+                    .flex-item-2 {
+                    flex: 1; /* Takes up 2 parts of the available space */
+                    width: 250px;
+                    }
+        .form-container, .table-container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: auto;
+            margin-bottom: 20px;
+        }
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+        .form-group {
+            flex: 1;
+            margin-right: 15px;
+        }
+        .form-group:last-child {
+            margin-right: 0;
+        }
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .form-actions {
+            text-align: center;
+        }
+        .form-actions button {
+            width: 120px;
+            padding: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            margin: 0 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .submit { background-color: #038b21; }
+        .submit:hover { background-color: #75b81e; }
+        .reset { background-color: #6c757d; }
+        .reset:hover { background-color: #5a6268; }
+        .table-container { display: flex; justify-content: center; align-items: center; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 8px; text-align: left; border: 1px solid #ddd; }
+        th { background-color: #565699; font-weight: bold; color: #eef1f0; }
+        #loader { visibility: hidden; }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <div class="flex-container">
+        <div class="flex-item-1">
+        <div class="form-container">
+            <h2><u>Transaction Entry</u></h2>
+            <form id="transactionForm">
+                <!-- Transaction Type -->
+                <input type="text" id="id" name="id" readonly style="display: none;">
+                <div class="row">
+                    <div class="form-group">
+                        <label for="type">Transaction</label>
+                        <select id="type" name="type" style="width: 100px;" required>
+                            <option value="">Select</option>
+                            <option value="Sale">Sale</option>
+                            <option value="Purchase">Purchase</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="date">Date</label>
+                        <input type="date" id="date" name="date" style="width: 150px;" value="" required>
+                    </div>
+                </div>
+
+                <!-- Product Name, Price, Quantity, Total -->
+                <div class="row">
+                    <div class="form-group">
+                        <label for="product">Product Name</label>
+                        <input list="product-datalist" id="product" name="product" placeholder="Choose a product" style="width: 280px;" required>
+                        <datalist id="product-datalist"></datalist>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <img id="productImage" src="" style="width: 300px; height: auto; display: none;">
+                    </div>
+                </div>
+
+<div class="row" style="display: flex; align-items: center;">
+    <div class="form-group" style="margin-right: 0;">
+        <label for="price">Price</label>
+        <input style="width: 100px; margin-right: 0;" type="number" id="price" name="price" placeholder="Price" required>
+    </div>
+    <div class="form-group" style="margin-right: 0;">
+        <label for="quantity">Quantity</label>
+        <input style="width: 100px; margin-right: 0;" type="number" id="quantity" name="quantity" placeholder="Enter Quantity" required>
+    </div>
+    <div class="form-group" style="margin-right: 0;">
+        <label for="total">Total</label>
+        <input style="width: 100px; margin-right: 0;" type="number" id="total" name="total" placeholder="Total Price" readonly required>
+    </div>
+</div>
+
+                <!-- Location, Used Machine, Photo -->
+                
+                    <div class="form-row" style="display: flex; align-items: center;">
+                        <p class="h6 mb-4" style="padding: 0; line-height: 0; color: blue; margin-right: 10px;"><b>Available Stock :- </b></p>
+                        <p class="h6 mb-4" name="stock" id="stock" style="padding: 0; line-height: 0; color: red;"><b></b></p>
+                    </div>
+                    <div class="form-row" style="display: flex; align-items: center;">
+                        <p class="h6 mb-4" style="padding: 0; line-height: 0; color: blue; margin-right: 10px;"><b>Supplier :- </b></p>
+                        <p class="h6 mb-4" name="supplier" id="supplier" style="color: red;"><b></b></p>
+                    </div>
+                    <div class="form-row" style="display: flex; align-items: center;">
+                        <p class="h6 mb-4" style="padding: 0; line-height: 0; color: blue; margin-right: 10px;"><b>Location :- </b></p>
+                        <p class="h6 mb-4" name="location" id="location" style="padding: 0; line-height: 0; color: red;"><b></b></p>
+                    </div>
+
+                <!-- Form Actions -->
+                <div class="row">
+                <div class="form-actions">
+                    <button type="button" class="submit" onclick="insert_value()">Submit</button>
+                    <button type="button" class="reset" onclick="resetTransactionForm()">Reset</button>
+                </div>
+                <div id="loader" style="visibility:hidden;">Loading...</div>
+                <div id="re"></div>
+        </div>
+        </div>
+        </form>
+            
+        </div>
+        </div>
+        <div class="table-container">
+            <div id="showData"></div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            var today = new Date().toISOString().split('T')[0]; // Get current date in YYYY-MM-DD format
+            $("#date").val(today);
+            fetchDropdownData();
+        });
+
+        var script_url = "https://script.google.com/macros/s/AKfycbwQXCwpwP5HrVTavS98cUrrRlChF_woxxReFcuqFVH_jZztTllUdIGuBItAK059NBWWig/exec"; // Replace with your Google Apps Script URL
+        var currentEditingID = null;
+
+        // Fetch product data when the product is selected
+    $("#product").on("change", function() {
+        var productName = $(this).val();
+        if (productName) {
+            $.ajax({
+                url: script_url + "?action=getProductDetails&product=" + productName,
+                type: "GET",
+                success: function(data) {
+                    if (data) {
+                        // Populate fields
+                        $("#price").val(data.price || "");
+                        document.getElementById("stock").textContent = data.stock || "N/A";
+                        document.getElementById("location").textContent = data.location || "N/A";
+                        document.getElementById("supplier").textContent = data.supplier || "N/A";
+                        
+                        // Set product image
+                        if (data.productImage) {
+                            var img = document.getElementById("productImage");
+                            img.src = data.productImage;
+                            img.style.display = "block"; // Make the image visible
+                        } else {
+                            document.getElementById("productImage").style.display = "none"; // Hide image if not available
+                        }
+                    } else {
+                        alert("No product details found.");
+                    }
+                },
+                error: function() {
+                    alert("Failed to fetch product details");
+                }
+            });
+        }
+    });
+        // Calculate total when quantity is changed
+        $("#quantity").on("input", function() {
+            var price = parseFloat($("#price").val()) || 0;
+            var quantity = parseFloat($(this).val()) || 0;
+            $("#total").val(price * quantity);
+        });
+
+        function resetTransactionForm() {
+            $("#productImage").hide();
+            $("#transactionForm")[0].reset();
+            currentEditingID = null;
+                const img = document.getElementById('img');
+                if (img) img.src = '';
+
+                const supplier = document.getElementById('supplier');
+                if (supplier) supplier.innerHTML = '';
+
+                const stock = document.getElementById('stock');
+                if (stock) stock.innerHTML = '';
+
+                const location = document.getElementById('location');
+                if (location) location.innerHTML = '';
+            $("#date").val(new Date().toISOString().split('T')[0]); // Reset date to today
+        }
+
+        function insert_value() {
+            $("#loader").css("visibility", "visible");
+
+            var id1 = generateDateTimeID();
+            $("#id").val(id1); // Show this ID in the input field
+
+            var product = $("#product").val();
+            var type = $("#type").val();
+            var quantity = $("#quantity").val();
+            var date = $("#date").val();
+            var price = $("#price").val();
+            var total = $("#total").val();
+                if (!product || !type || !quantity) {
+                    $("#re").html("All fields are required. Please fill in all fields.")
+                        .css("display", "block")
+                        .css("color", "red");
+                    $("#loader").css("visibility", "hidden");
+
+                    // Hide the error message after 3 seconds
+                    setTimeout(function() { $("#re").css("display", "none"); }, 3000);
+                    return; // Exit the function without making the AJAX call
+                }
+            var url = script_url + "?callback=ctrlq&id=" + id1 + "&product=" + product + "&type=" + type + "&quantity=" + quantity + "&date=" + date + "&price=" + price + "&total=" + total + "&action=insert";
+
+            $.ajax({
+                crossDomain: true,
+                url: url,
+                method: "GET",
+                dataType: "jsonp",
+                success: function() {
+                    $("#re").html("Transaction added successfully").css("display", "block");
+                    $("#loader").css("visibility", "hidden");
+                    setTimeout(function() { $("#re").css("display", "none"); }, 3000);
+                    resetTransactionForm();
+                }
+            });
+        }
+
+        function fetchDropdownData() {
+            var url = script_url + "?action=getDropdownData";  // Action to get dropdown data
+            
+            $.getJSON(url, function(data) {
+                populateDatalist("#product-datalist", data.product);
+            });
+        }
+        function populateDatalist(datalistId, data) {
+            var datalist = $(datalistId);
+            datalist.empty();  // Clear existing options
+
+            $.each(data, function(index, value) {
+                datalist.append('<option value="' + value + '">');
+            });
+        }
+
+
+        function generateDateTimeID() {
+            return "T" + new Date().getTime();
+        }
+        function ctrlq(e) {
+            $("#re").html(e.result).css("display", "block");
+            setTimeout(function() { $("#re").css("display", "none"); }, 3000);
+            resetTransactionForm();
+        }
+    </script>
+</body>
+</html>
