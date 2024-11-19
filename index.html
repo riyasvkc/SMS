@@ -304,6 +304,7 @@
         }
         function ctrlq(e) {
             $("#re").html(e.result).css("display", "block");
+            $("#loader").css("visibility", "hidden");
             setTimeout(function() { $("#re").css("display", "none"); }, 3000);
             resetTransactionForm();
         }
